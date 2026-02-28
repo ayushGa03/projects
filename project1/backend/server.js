@@ -1,0 +1,13 @@
+const express = require("express")
+require('dotenv').config()
+const app = require("./src/app")
+const db = require("./config/database")
+const cookie = require("cookie-parser")
+const authRouter = require("./routes/auth.routes")
+app.use(express.json())
+app.use(cookie())
+db()
+app.use("/api/auth",authRouter)
+app.listen(3030,(req,res)=>{
+    console.log("server is working on the 3030 port")
+})
