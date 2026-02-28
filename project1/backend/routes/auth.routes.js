@@ -4,6 +4,7 @@ const authRouter = express.Router()
 const bcrypt  = require("bcrypt")
 const jwt  = require("jsonwebtoken")
 const cookie = require("cookie-parser")
+const loginController = require("../controller/login.Controller")
 //register Route
 authRouter.post("/register", async (req, res) => {
   try {
@@ -61,44 +62,4 @@ authRouter.post("/register", async (req, res) => {
 module.exports = authRouter
 // login
 
-authRouter.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body
-
-    if (!email || !password) {
-      return res.status(400).json({
-        message: "Email and password required"
-      })
-    }
-
-    const user = await userModel.findOne({ email })
-
-    if (!user) {
-      return res.status(404).json({
-        message: "Please register first"
-      })
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password)
-
-    if (!isMatch) {
-      return res.status(401).json({
-        message: "Invalid credentials"
-      })
-    }
-
-    res.status(200).json({
-      message: "Successfully logged in",
-      user: {
-        id: user._id,
-        email: user.email,
-        username: user.username
-      }
-    })
-
-  } catch (err) {
-    res.status(500).json({
-      message: "Something went wrong"
-    })
-  }
-})
+authRouter.post("/login", loginController)
